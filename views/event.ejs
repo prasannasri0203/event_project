@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <div style="margin: 100px 100px 50px 50px;margin-bottom: -73px;" align="right"><a href="/event-list" class="btn btn-primary">List Event</a></div>
+    <div class="container">
+        <section class="add">
+            <div><h4>Event Form<h4></div><br>
+        <% if (typeof errors != 'undefined') {%>
+            <% errors.forEach(function(error) { %>
+                <div class="alert alert-danger">
+                    <%= error.msg %>
+                </div>
+            <% });%>
+        <% }%>
+        <% if (typeof warning != 'undefined') {%>
+            <div class="alert alert-danger">
+                <%= warning %>
+            </div>
+        <% }%>
+        <% if (typeof result != 'undefined') {%>
+                <div class="alert alert-success">
+                    <%= result %>
+                </div>
+        <% }%>
+            <form action="/add" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="eventName">Event Name:</label><br>
+                <input type="text" class="form-control col-sm-4" id="eventName" name="eventName" 
+                value="" placeholder="Event Name">
+            </div>
+            <br>
+            <br>
+            <div class="form-group">
+                <label for="location">Location:</label><br>
+                <textarea id="location" class="form-control col-sm-4" name="location" rows="3"
+                 cols="40"></textarea>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="form-group">
+                <label for="startDate">Start Date </label><br>
+                <input type="text" class="form-control col-sm-4" name="startDate" id="startDate" value="" />
+            </div>
+            <br>
+            <br>
+            <div class="form-group">
+                <label for="endDate">End Date </label><br>
+                <input type="text" class="form-control col-sm-4" name="endDate" id="endDate" value="">
+            </div>
+            <br>
+            <br>
+            <div class="form-group">
+                <label for="banner">Banner:</label><br>
+                <input type="file" class="form-control col-sm-4" id="banner" name="image">
+            </div> 
+            <br>
+            <br>
+            <div class="form-group">
+                <input type="submit">
+            </div>
+            </form>
+        </section>
+    </div>
+    <br>
+    <br>
+</body>
+
+<script>
+    //Start date and end date
+var start = new Date();
+// set end date to max one year period:
+var end = new Date(new Date().setYear(start.getFullYear()+1));
+
+$('#startDate, #endDate').datepicker('setDate', start );
+$('#startDate').datepicker({
+    startDate : start,
+    format: "yyyy-mm-dd",
+    todayHighlight: true,
+    autoclose: true,
+    endDate   : end
+// update "toDate" defaults whenever "fromDate" changes
+}).on('changeDate', function(){
+    // set the "toDate" start to not be later than "fromDate" ends:
+    $('#endDate').val("").datepicker("update");
+    $('#endDate').datepicker('setStartDate', new Date($(this).val()));
+});
+
+$('#endDate').datepicker({
+    startDate : start,
+    format: "yyyy-mm-dd",
+    todayHighlight: true,
+    endDate   : end
+});
+</script>
+</html>

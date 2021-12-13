@@ -1,0 +1,10 @@
+{
+    "PrivateKey": "the-super-strong-secrect",
+    "database": {
+        "host": "localhost",
+        "user": "root",
+        "password": "",
+        "database": "event_db"
+    }
+}
+  

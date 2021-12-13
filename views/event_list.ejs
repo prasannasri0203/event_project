@@ -1,0 +1,130 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<div class="whole">
+        <div style="margin: 20px 100px 50px 40px;margin-bottom: -73px;" align="right"><a href="/" class="btn btn-primary" style="
+            margin: 27px 150px -68px 38px;">Add New Event</a></div>
+        <div style="margin: 100px 100px 50px 50px;margin-bottom: -73px;" align="right">
+            <button id="removeEvent" class="btn btn-primary">Delete</button>
+            <button id="exportEvent" class="btn btn-primary">Export</button>
+        <br/><br/><br/><br/>
+        <table class="table table-striped" id="tab">
+            <thead>
+                <tr class="home">
+                    <th scope="col"><input type="checkbox" name="allEventCheck" id="allEventCheck" value="all"></th>
+                    <th scope="col">S.NO</th>
+                    <th scope="col">Event Name</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Banner</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (typeof eventLists != 'undefined') 
+                var i=1; {%>
+                <% eventLists.forEach((eventList)=>{ %>
+                    <tr id="id_<%= eventList.id %>">
+                        <td>
+                            <input type="checkbox" name="eventCheck[]" id="myCheck_<%= eventList.id %>" value="<%= eventList.id %>" >  
+                        </td>
+                        <td>
+                            <%= i %>
+                        </td>
+                        <td>
+                            <%= eventList.event_name %>
+                        </td>
+                        <td>
+                            <%= eventList.location %>
+                        </td>
+                        <td>
+                            <%= eventList.start_date %>
+                        </td>
+                        <td>
+                            <%= eventList.end_date %>
+                        </td>
+                        <td>
+                            <img width="60" height="60" src="<%=baseURL%>/images/<%= eventList.banner %>" />
+                        </td>
+
+                        <td>
+                            <butt><a href="/edit-event/<%= eventList.id%>"><span class="iconify"
+                                    data-icon="clarity:edit-solid" data-inline="false"></span></a>
+                        </td>
+                        <td>
+                            <a href="/delete-event/<%= eventList.id %>" class="Delete"><span
+                                    class="iconify i" data-icon="fluent:delete-24-filled"
+                                    data-inline="false"></span></span></a>
+                        </td>
+                    </tr>
+                    <% i++;}) %>
+                    <% }%>
+                    <% if (typeof warning != 'undefined') {%>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td align="center">
+                            <%= warning %>
+                        </td>
+                        <td></td>
+                    <% }%>
+            </tbody>
+        </table>
+    </div>
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+<script>
+  
+$('#removeEvent').on("click", function () { 
+    //all data
+    var ischecked = $("#allEventCheck").is(":checked");
+    if(ischecked) {
+        var ischeckeddata = "all";
+        var obj = { removeEventValue: ischeckeddata };  
+    }else{
+        //selected data
+        var checkbox_value = "";
+        $(":checkbox").each(function () {
+            var ischecked = $(this).is(":checked");
+            if (ischecked) {
+                checkbox_value +=$(this).val()+",";
+            }
+        });
+    }
+    var obj = { removeEventValue: checkbox_value };
+    $.ajax({
+        type: 'post',
+        url: '/remove',
+        data: obj,
+       success : function(res){
+           location.reload();
+       }
+    });
+});
+
+$('#exportEvent').on("click", function () { 
+    var checkbox_value = "";
+    $(":checkbox").each(function () {
+        var ischecked = $(this).is(":checked");
+        if (ischecked) {
+            checkbox_value +=$(this).val()+",";
+        }
+    });
+    var obj = { removeEventValue: checkbox_value };  
+    $.ajax({
+        type: 'post',
+        url: '/excel',
+        data: obj,
+    success : function(res){
+        location.reload();
+    }
+    });
+});
+</script>
